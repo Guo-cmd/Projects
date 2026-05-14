@@ -83,7 +83,7 @@ export const TaskBinder: React.FC<TaskBinderProps> = ({
                       : "border-transparent bg-muted/30 hover:bg-muted/50"
                   )}
                 >
-                  <cat.icon className={cn("h-4 w-4", cat.color, "bg-transparent p-0 rounded-none")} />
+                  <cat.icon className={cn("h-4 w-4", cat.color, "p-0 rounded-none bg-transparent")} />
                   <span className="text-[10px] font-medium">{cat.label}</span>
                 </button>
               ))}

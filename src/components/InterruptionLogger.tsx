@@ -31,7 +31,7 @@ export const InterruptionLogger: React.FC<InterruptionLoggerProps> = ({
 }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="rounded-t-[2.5rem] border-none shadow-2xl backdrop-blur-xl bg-background/80 px-6 pb-10">
+      <SheetContent side="bottom" className="rounded-t-[2.5rem] border-none shadow-2xl backdrop-blur-xl bg-background/80 px-6 pb-10 max-h-[85vh] overflow-y-auto">
         <div className="mx-auto w-12 h-1.5 bg-muted rounded-full mb-6" />
         <SheetHeader className="text-center space-y-2 mb-8">
           <SheetTitle className="text-xl font-black">记录中断原因</SheetTitle>
