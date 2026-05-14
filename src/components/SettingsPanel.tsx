@@ -51,6 +51,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onSave }
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
           <Settings className="h-5 w-5" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-[calc(100%-2rem)] md:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>设置</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-6 py-4">
           <div className="grid gap-2">
             <Label htmlFor="dailyGoal">每日目标 (番茄数)</Label>
             <Input
@@ -62,14 +69,6 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onSave }
               max={50}
             />
           </div>
-
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-[calc(100%-2rem)] md:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>设置</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-6 py-4">
           <div className="grid gap-2">
             <Label htmlFor="work">番茄钟时长 (分钟)</Label>
             <Input
