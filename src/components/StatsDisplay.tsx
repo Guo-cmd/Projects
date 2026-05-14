@@ -20,25 +20,25 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
-      <div className="grid grid-cols-2 gap-6 w-full">
-        <Card className="bg-background/40 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 rounded-3xl overflow-hidden transition-all hover:shadow-2xl hover:shadow-black/10 group">
-          <CardContent className="p-8 flex flex-col items-center justify-center space-y-3 relative">
-            <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Calendar className="h-12 w-12" />
+    <div className="flex flex-col items-center space-y-4 md:space-y-6 w-full max-w-md">
+      <div className="grid grid-cols-2 gap-3 md:gap-6 w-full">
+        <Card className="bg-background/40 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 rounded-2xl md:rounded-3xl overflow-hidden transition-all hover:shadow-2xl hover:shadow-black/10 group">
+          <CardContent className="p-5 md:p-8 flex flex-col items-center justify-center space-y-2 md:space-y-3 relative">
+            <div className="absolute top-0 right-0 p-2 md:p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Calendar className="h-8 w-8 md:h-12 md:w-12" />
             </div>
-            <Calendar className="h-6 w-6 text-primary transition-transform group-hover:scale-110" />
-            <div className="text-4xl font-black tracking-tight">{stats.todayCompleted}</div>
+            <Calendar className="h-5 w-5 md:h-6 md:w-6 text-primary transition-transform group-hover:scale-110" />
+            <div className="text-3xl md:text-4xl font-black tracking-tight">{stats.todayCompleted}</div>
             <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em]">今日完成</div>
           </CardContent>
         </Card>
-        <Card className="bg-background/40 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 rounded-3xl overflow-hidden transition-all hover:shadow-2xl hover:shadow-black/10 group">
-          <CardContent className="p-8 flex flex-col items-center justify-center space-y-3 relative">
-            <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Trophy className="h-12 w-12" />
+        <Card className="bg-background/40 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 rounded-2xl md:rounded-3xl overflow-hidden transition-all hover:shadow-2xl hover:shadow-black/10 group">
+          <CardContent className="p-5 md:p-8 flex flex-col items-center justify-center space-y-2 md:space-y-3 relative">
+            <div className="absolute top-0 right-0 p-2 md:p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Trophy className="h-8 w-8 md:h-12 md:w-12" />
             </div>
-            <Trophy className="h-6 w-6 text-secondary transition-transform group-hover:scale-110" />
-            <div className="text-4xl font-black tracking-tight">{stats.totalCompleted}</div>
+            <Trophy className="h-5 w-5 md:h-6 md:w-6 text-secondary transition-transform group-hover:scale-110" />
+            <div className="text-3xl md:text-4xl font-black tracking-tight">{stats.totalCompleted}</div>
             <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em]">累计完成</div>
           </CardContent>
         </Card>

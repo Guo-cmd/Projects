@@ -257,7 +257,7 @@ export const Timer: React.FC<TimerProps> = ({
               }
             }}
             className={cn(
-              "px-6 py-2 h-auto rounded-full transition-all duration-300 font-medium",
+              "px-4 py-2 md:px-6 md:py-2 h-auto rounded-full transition-all duration-300 font-medium text-xs md:text-sm",
               status === s 
                 ? "bg-background text-foreground shadow-sm scale-105" 
                 : "text-muted-foreground hover:text-foreground hover:bg-transparent"
@@ -270,21 +270,21 @@ export const Timer: React.FC<TimerProps> = ({
 
       <div className="relative group">
          <div className="absolute -inset-8 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-         <div className="text-[10rem] md:text-[12rem] font-mono-timer font-bold tracking-tighter leading-none select-none relative transition-transform duration-500 hover:scale-[1.02]">
+         <div className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[12rem] font-mono-timer font-bold tracking-tighter leading-none select-none relative transition-transform duration-500 hover:scale-[1.02]">
             {formatTime(timeLeft)}
          </div>
       </div>
 
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-3 md:space-x-6">
         <Button
           onClick={startTimer}
           disabled={isStarted}
           className={cn(
-            "h-14 px-10 text-lg font-semibold rounded-2xl shadow-lg transition-all active:scale-95",
+            "h-12 md:h-14 px-6 md:px-10 text-base md:text-lg font-semibold rounded-2xl shadow-lg transition-all active:scale-95 touch-manipulation",
             isStarted ? "bg-muted text-muted-foreground shadow-none" : "shadow-primary/20 hover:shadow-primary/30"
           )}
         >
-          <Play className={cn("mr-2 h-5 w-5 fill-current", isStarted && "opacity-50")} /> 开始
+          <Play className={cn("mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5 fill-current", isStarted && "opacity-50")} /> 开始
         </Button>
 
         <Button
@@ -292,17 +292,17 @@ export const Timer: React.FC<TimerProps> = ({
           disabled={!isStarted}
           variant="outline"
           className={cn(
-            "h-14 px-10 text-lg font-semibold rounded-2xl border-2 transition-all active:scale-95",
+            "h-12 md:h-14 px-6 md:px-10 text-base md:text-lg font-semibold rounded-2xl border-2 transition-all active:scale-95 touch-manipulation",
             !isStarted ? "bg-muted/10 text-muted-foreground opacity-50 grayscale" : "hover:bg-accent hover:border-primary/20"
           )}
         >
           {isActive ? (
             <>
-              <Pause className="mr-2 h-5 w-5 fill-current" /> 暂停
+              <Pause className="mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5 fill-current" /> 暂停
             </>
           ) : (
             <>
-              <Play className="mr-2 h-5 w-5 fill-current" /> 继续
+              <Play className="mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5 fill-current" /> 继续
             </>
           )}
         </Button>
@@ -313,11 +313,11 @@ export const Timer: React.FC<TimerProps> = ({
           onClick={resetToInitial}
           disabled={!isStarted}
           className={cn(
-            "h-14 w-14 rounded-2xl border-2 transition-all active:rotate-180",
+            "h-12 w-12 md:h-14 md:w-14 rounded-2xl border-2 transition-all active:rotate-180 touch-manipulation",
             !isStarted ? "bg-muted/10 text-muted-foreground opacity-50 grayscale" : "hover:bg-accent hover:border-primary/20"
           )}
         >
-          <RotateCcw className="h-6 w-6" />
+          <RotateCcw className="h-5 w-5 md:h-6 md:w-6" />
         </Button>
       </div>
 

@@ -161,24 +161,24 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between p-6 md:p-12 bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-between p-4 sm:p-6 md:p-12 bg-gradient-to-b from-background to-muted/20 safe-area-pb">
       {/* Header */}
-      <header className="w-full max-w-2xl flex justify-between items-center z-10">
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center space-x-3 group">
-            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 transition-transform group-hover:rotate-12">
-              <span className="text-primary-foreground font-bold text-xl">🍅</span>
+      <header className="w-full max-w-2xl flex justify-between items-start md:items-center z-10 pt-safe">
+        <div className="flex flex-col space-y-1.5 md:space-y-2">
+          <div className="flex items-center space-x-2 md:space-x-3 group">
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 transition-transform group-hover:rotate-12">
+              <span className="text-primary-foreground font-bold text-base md:text-xl">🍅</span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground">专注钟</h1>
+            <h1 className="text-xl md:text-2xl font-black tracking-tight text-foreground">专注钟</h1>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="h-1.5 w-32 bg-muted rounded-full overflow-hidden">
+            <div className="h-1.5 w-24 md:w-32 bg-muted rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000"
                 style={{ width: `${Math.min((stats.todayCompleted / (settings.dailyGoal || 8)) * 100, 100)}%` }}
               />
             </div>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
               目标: {stats.todayCompleted}/{settings.dailyGoal || 8}
             </span>
           </div>
@@ -187,7 +187,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-2xl z-10">
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-2xl z-10 py-4 md:py-8">
         <Timer 
           settings={settings} 
           status={status}
@@ -200,11 +200,11 @@ export default function App() {
       </main>
 
       {/* Footer / Stats */}
-      <footer className="w-full max-w-2xl flex flex-col items-center space-y-8 z-10">
+      <footer className="w-full max-w-2xl flex flex-col items-center space-y-4 md:space-y-8 z-10 pb-safe">
         <StatsDisplay stats={stats} />
         <div className="flex flex-col items-center space-y-1">
-          <p className="text-sm font-medium text-foreground/80">保持专注，高效生活</p>
-          <p className="text-xs text-muted-foreground/60">番茄工作法助力您的每一个进步</p>
+          <p className="text-xs md:text-sm font-medium text-foreground/80">保持专注，高效生活</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground/60">番茄工作法助力您的每一个进步</p>
         </div>
       </footer>
 
