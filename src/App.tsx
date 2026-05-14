@@ -175,11 +175,11 @@ export default function App() {
             <div className="h-1.5 w-32 bg-muted rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000"
-                style={{ width: `${Math.min((stats.todayCompleted / settings.dailyGoal) * 100, 100)}%` }}
+                style={{ width: `${Math.min((stats.todayCompleted / (settings.dailyGoal || 8)) * 100, 100)}%` }}
               />
             </div>
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              目标: {stats.todayCompleted}/{settings.dailyGoal}
+              目标: {stats.todayCompleted}/{settings.dailyGoal || 8}
             </span>
           </div>
         </div>
