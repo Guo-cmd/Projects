@@ -1,0 +1,495 @@
+{
+  "project": "Pomodoro Focus Companion - 补充功能需求文档",
+  "version": "2.0",
+  "date": "2026-05-14",
+  "core_philosophy": "从'精致计时器'升级为'专注伙伴'——解决启动阻力与中断放弃两大痛点",
+  "modules": [
+    {
+      "module_id": "M1",
+      "module_name": "任务绑定与承诺机制",
+      "priority": "P0",
+      "rationale": "利用承诺一致性原理降低启动阻力",
+      "features": [
+        {
+          "feature_id": "M1-F1",
+          "feature_name": "番茄钟任务前置绑定",
+          "description": "点击'开始'前必须选择或创建任务，未绑定任务时开始按钮置灰并提示",
+          "interaction": "任务选择浮层 → 快速输入框 + 最近任务快捷标签 + 预设分类标签",
+          "ui_requirements": [
+            "浮层采用毛玻璃效果，与主界面风格统一",
+            "最近任务显示最近3个，支持一键选择",
+            "分类标签：深度工作、浅层工作、会议、学习、创意"
+          ],
+          "data_model": {
+            "task_id": "string (uuid)",
+            "task_name": "string",
+            "category": "enum[deep_work, shallow_work, meeting, learning, creative]",
+            "created_at": "ISO8601",
+            "last_used": "ISO8601",
+            "total_pomodoros": "integer"
+          }
+        },
+        {
+          "feature_id": "M1-F2",
+          "feature_name": "每日番茄目标设定",
+          "description": "用户设定当日计划完成的番茄数，系统实时显示进度",
+          "interaction": "设置面板 → 数字输入/滑块 → 主界面顶部进度环",
+          "ui_requirements": [
+            "进度环采用渐变色，随完成度从蓝到绿过渡",
+            "达成目标时触发庆祝动画（微粒子效果）",
+            "支持修改当日目标（需确认）"
+          ],
+          "default_value": 8
+        },
+        {
+          "feature_id": "M1-F3",
+          "feature_name": "任务维度统计",
+          "description": "统计按任务/分类聚合，而非仅按番茄数量",
+          "interaction": "统计面板 → 分类饼图 + 任务柱状图 + 时间趋势折线图",
+          "data_output": {
+            "by_category": {
+              "deep_work": {
+                "pomodoros": 4,
+                "minutes": 100
+              },
+              "shallow_work": {
+                "pomodoros": 2,
+                "minutes": 50
+              }
+            },
+            "by_task": {
+              "task_id_1": {
+                "name": "写代码",
+                "pomodoros": 3,
+                "minutes": 75
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "M2",
+      "module_name": "智能中断处理与断点续传",
+      "priority": "P0",
+      "rationale": "降低中断后放弃率，将中断转化为数据洞察",
+      "features": [
+        {
+          "feature_id": "M2-F1",
+          "feature_name": "暂停原因快速记录",
+          "description": "暂停时弹出非阻断式浮层，记录中断原因后自动恢复",
+          "interaction": "点击暂停 → 底部滑出浮层 → 选择原因/自定义 → 自动恢复倒计时",
+          "ui_requirements": [
+            "浮层高度不超过屏幕30%，不遮挡计时器",
+            "快捷选项：同事打断、去洗手间、突发事务、身体不适、其他",
+            "选择'其他'时展开文本输入框，限制50字",
+            "提供'不记录，直接暂停'选项（二次确认）"
+          ],
+          "shortcut_options": [
+            {
+              "id": "colleague",
+              "label": "同事打断",
+              "icon": "👤"
+            },
+            {
+              "id": "restroom",
+              "label": "去洗手间",
+              "icon": "🚻"
+            },
+            {
+              "id": "urgent",
+              "label": "突发事务",
+              "icon": "⚡"
+            },
+            {
+              "id": "health",
+              "label": "身体不适",
+              "icon": "🏥"
+            },
+            {
+              "id": "other",
+              "label": "其他",
+              "icon": "📝"
+            }
+          ],
+          "auto_resume": "选择原因后2秒自动恢复，显示'3...2...1...继续专注'"
+        },
+        {
+          "feature_id": "M2-F2",
+          "feature_name": "温柔召回机制",
+          "description": "暂停超时后主动提醒用户回归",
+          "trigger_conditions": [
+            "暂停时长 > 5分钟",
+            "浏览器标签页重新获得焦点（如果计时器在后台暂停）"
+          ],
+          "notification": {
+            "type": "浏览器通知 + 轻音效",
+            "title": "专注伙伴",
+            "body": "『{task_name}』还在等你，要继续吗？",
+            "actions": [
+              "继续专注",
+              "放弃本次",
+              "再休息5分钟"
+            ]
+          },
+          "ui_requirements": [
+            "通知使用应用品牌色渐变背景",
+            "音效区别于工作/休息结束音，更轻柔"
+          ]
+        },
+        {
+          "feature_id": "M2-F3",
+          "feature_name": "断点续传与崩溃恢复",
+          "description": "页面刷新或浏览器关闭后恢复进行中的番茄钟",
+          "interaction": "页面加载 → 检测localStorage中是否存在进行中状态 → 询问用户",
+          "recovery_logic": {
+            "check_interval": "每30秒自动保存当前状态到localStorage",
+            "stored_fields": [
+              "task_id",
+              "task_name",
+              "start_time",
+              "elapsed_seconds",
+              "total_duration",
+              "is_work_period",
+              "pause_history"
+            ],
+            "on_reload": "弹出恢复确认卡片：'你有一个进行中的番茄钟（还剩{remaining}分钟）'"
+          },
+          "ui_requirements": [
+            "恢复卡片采用从顶部滑入的动画",
+            "提供'继续'、'重新开始'、'放弃'三个选项",
+            "放弃时询问原因并记录"
+          ]
+        }
+      ]
+    },
+    {
+      "module_id": "M3",
+      "module_name": "数据可视化与正反馈循环",
+      "priority": "P1",
+      "rationale": "让数据成为用户坚持使用的外部动力",
+      "features": [
+        {
+          "feature_id": "M3-F1",
+          "feature_name": "专注热力图",
+          "description": "GitHub Contributions风格的热力图，展示每日专注时长",
+          "interaction": "统计面板 → 年/月/周视图切换 → 悬停显示当日详情",
+          "color_scale": [
+            {
+              "range": "0分钟",
+              "color": "#ebedf0"
+            },
+            {
+              "range": "1-25分钟",
+              "color": "#9be9a8"
+            },
+            {
+              "range": "26-100分钟",
+              "color": "#40c463"
+            },
+            {
+              "range": "101-200分钟",
+              "color": "#30a14e"
+            },
+            {
+              "range": ">200分钟",
+              "color": "#216e39"
+            }
+          ],
+          "ui_requirements": [
+            "支持切换年/月/周三种时间粒度",
+            "悬停tooltip显示：日期、番茄数、主要任务",
+            "连续专注天数高亮显示（Streak标识）"
+          ]
+        },
+        {
+          "feature_id": "M3-F2",
+          "feature_name": "深度 vs 浅层工作分析",
+          "description": "基于任务分类自动计算工作深度占比",
+          "interaction": "统计面板 → 环形图 + 趋势对比折线图",
+          "metrics": [
+            {
+              "name": "深度工作占比",
+              "formula": "deep_work_pomodoros / total_pomodoros"
+            },
+            {
+              "name": "平均连续专注时长",
+              "formula": "连续完成番茄钟的最长序列 × 25分钟"
+            },
+            {
+              "name": "中断频率",
+              "formula": "中断次数 / 总番茄数"
+            }
+          ],
+          "insights": [
+            "当深度工作占比 < 30%时提示：'今天浅层工作较多，尝试为重要任务预留整块时间'",
+            "当中断频率 > 50%时提示：'频繁中断可能影响效率，试试开启严格模式'"
+          ]
+        },
+        {
+          "feature_id": "M3-F3",
+          "feature_name": "周报/月报导出",
+          "description": "生成可分享的专注报告",
+          "export_formats": [
+            {
+              "format": "PNG图片",
+              "dimensions": "1200×1600",
+              "content": "热力图 + 关键数据 + 本周亮点 + 品牌水印"
+            },
+            {
+              "format": "Markdown",
+              "content": "结构化文本报告，适合粘贴到周报"
+            }
+          ],
+          "social_share": {
+            "platforms": [
+              "微信",
+              "微博",
+              "Twitter/X",
+              "复制链接"
+            ],
+            "og_image": "自动生成包含用户数据的分享卡片"
+          }
+        }
+      ]
+    },
+    {
+      "module_id": "M4",
+      "module_name": "场景化沉浸模式",
+      "priority": "P1",
+      "rationale": "将工具升级为环境，帮助用户进入心流",
+      "features": [
+        {
+          "feature_id": "M4-F1",
+          "feature_name": "专注模式全屏遮罩",
+          "description": "番茄钟开始时进入沉浸式界面",
+          "interaction": "点击开始 → 可选进入专注模式 → 全屏渐变背景 + 呼吸动画",
+          "ui_requirements": [
+            "遮罩透明度90%，保留计时器核心信息",
+            "背景呼吸动画：颜色随时间微妙渐变（25分钟完成一个色环）",
+            "支持ESC键退出，退出时记录为'主动退出'",
+            "提供迷你模式（小浮窗）选项"
+          ],
+          "animations": {
+            "breathing": "背景色HSL色相每10秒微调±5度，营造时间流动感",
+            "progress": "底部细线进度条，随时间从左到右填充"
+          }
+        },
+        {
+          "feature_id": "M4-F2",
+          "feature_name": "白噪音与背景音",
+          "description": "计时期间播放可选环境音",
+          "sound_options": [
+            {
+              "id": "rain",
+              "name": "雨声",
+              "description": "适合深度思考"
+            },
+            {
+              "id": "cafe",
+              "name": "咖啡厅",
+              "description": "适合创意工作"
+            },
+            {
+              "id": "library",
+              "name": "图书馆",
+              "description": "适合阅读学习"
+            },
+            {
+              "id": "forest",
+              "name": "森林",
+              "description": "适合放松冥想"
+            },
+            {
+              "id": "none",
+              "name": "静音",
+              "description": "仅提醒音效"
+            }
+          ],
+          "technical": {
+            "implementation": "Web Audio API + 循环播放",
+            "volume_control": "独立音量滑块，与提醒音效分离",
+            "fade_in_out": "开始/结束时各2秒淡入淡出"
+          }
+        },
+        {
+          "feature_id": "M4-F3",
+          "feature_name": "严格模式（Hardcore Mode）",
+          "description": "可选开启的强制自律模式",
+          "rules": [
+            "开始后无法暂停，只能放弃",
+            "放弃会记录为'失败番茄'，影响连续记录",
+            "放弃需要长按3秒确认，并强制输入原因",
+            "休息期间同样无法跳过，必须完成"
+          ],
+          "ui_requirements": [
+            "开启时界面边框变为警示红",
+            "暂停按钮替换为'放弃'按钮（红色，带长按进度环）",
+            "放弃确认弹窗：'严格模式下放弃将中断你的{streak}天连续记录'"
+          ],
+          "unlock_condition": "累计完成20个番茄钟后解锁，防止新手误用"
+        }
+      ]
+    },
+    {
+      "module_id": "M5",
+      "module_name": "休息守护与节奏控制",
+      "priority": "P1",
+      "rationale": "防止用户跳过休息导致透支",
+      "features": [
+        {
+          "feature_id": "M5-F1",
+          "feature_name": "跳过休息阻力设计",
+          "description": "增加跳过休息的操作成本",
+          "interaction": "休息界面 → 跳过按钮需长按3秒 → 显示渐进式提示",
+          "progressive_messages": [
+            {
+              "at": "0s",
+              "text": "按住以跳过休息"
+            },
+            {
+              "at": "1s",
+              "text": "休息是为了走更长远的路..."
+            },
+            {
+              "at": "2s",
+              "text": "你的大脑需要这段时间恢复..."
+            },
+            {
+              "at": "3s",
+              "text": "确定要跳过吗？",
+              "show_confirm": true
+            }
+          ],
+          "ui_requirements": [
+            "长按进度环围绕按钮旋转",
+            "提示文字采用打字机效果逐字显示",
+            "跳过成功后记录到统计中（标记为'skipped_break'）"
+          ]
+        },
+        {
+          "feature_id": "M5-F2",
+          "feature_name": "休息引导",
+          "description": "休息时提供放松引导",
+          "content": [
+            "20-20-20护眼提示：'看向20英尺外20秒'",
+            "深呼吸引导：'吸气4秒 → 屏息4秒 → 呼气6秒'",
+            "身体舒展：'站起来，伸展双臂，转动颈部'"
+          ],
+          "rotation": "每次休息随机显示一条，或按顺序轮换",
+          "ui_requirements": [
+            "休息时界面显示引导卡片，采用柔和配色",
+            "配合轻柔动画（如呼吸圆圈缩放）"
+          ]
+        }
+      ]
+    },
+    {
+      "module_id": "M6",
+      "module_name": "跨端同步与扩展",
+      "priority": "P2",
+      "rationale": "为长期发展预留架构空间",
+      "features": [
+        {
+          "feature_id": "M6-F1",
+          "feature_name": "数据导出/导入",
+          "description": "支持JSON格式完整数据迁移",
+          "use_cases": [
+            "换设备",
+            "备份",
+            "与其他工具集成"
+          ]
+        },
+        {
+          "feature_id": "M6-F2",
+          "feature_name": "PWA支持",
+          "description": "可安装为桌面/移动端应用",
+          "requirements": [
+            "manifest.json配置",
+            "Service Worker离线缓存",
+            "系统通知权限申请"
+          ]
+        },
+        {
+          "feature_id": "M6-F3",
+          "feature_name": "API预留接口",
+          "description": "为未来第三方集成预留",
+          "endpoints": [
+            {
+              "path": "/api/v1/pomodoros",
+              "method": "GET",
+              "auth": "api_key"
+            },
+            {
+              "path": "/api/v1/tasks",
+              "method": "CRUD",
+              "auth": "api_key"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "technical_specifications": {
+    "storage": {
+      "primary": "localStorage（结构化JSON）",
+      "schema_version": "v2",
+      "migration": "启动时检测版本，自动迁移旧数据"
+    },
+    "audio": {
+      "work_end": "清脆铃声（高频，短促）",
+      "break_end": "柔和钟声（低频，延音）",
+      "notification": "轻柔提示音（不刺耳）",
+      "format": "Web Audio API生成或OGG/MP3预加载"
+    },
+    "animation": {
+      "framework": "CSS Animation + requestAnimationFrame",
+      "principles": "60fps流畅、不阻塞主线程、prefers-reduced-motion适配"
+    },
+    "accessibility": {
+      "wcag_target": "AA级",
+      "requirements": [
+        "所有按钮支持键盘操作",
+        "颜色对比度 ≥ 4.5:1",
+        "动画支持减少动效偏好",
+        "屏幕阅读器标签完整"
+      ]
+    }
+  },
+  "implementation_roadmap": {
+    "phase_1": {
+      "name": "核心体验",
+      "modules": [
+        "M1",
+        "M2"
+      ],
+      "duration": "2周",
+      "goal": "解决启动阻力和中断放弃"
+    },
+    "phase_2": {
+      "name": "数据驱动",
+      "modules": [
+        "M3"
+      ],
+      "duration": "1.5周",
+      "goal": "建立正反馈循环"
+    },
+    "phase_3": {
+      "name": "沉浸升级",
+      "modules": [
+        "M4",
+        "M5"
+      ],
+      "duration": "2周",
+      "goal": "从工具升级为环境"
+    },
+    "phase_4": {
+      "name": "生态扩展",
+      "modules": [
+        "M6"
+      ],
+      "duration": "1周",
+      "goal": "为长期发展奠基"
+    }
+  }
+}
