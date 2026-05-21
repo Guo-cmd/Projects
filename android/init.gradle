@@ -1,0 +1,31 @@
+allprojects {
+    repositories {
+        all { ArtifactRepository repo ->
+            def url = repo.metaClass.getProperties().find { it.name == 'url' }?.getValue(repo)
+            if (url && (url.toString().contains('dl.google.com') || url.toString().contains('maven.google.com'))) {
+                project.logger.lifecycle "Redirecting ${url} to Aliyun mirror"
+                remove repo
+            }
+        }
+    }
+}
+
+beforeSettings { settings ->
+    settings.pluginManagement {
+        repositories {
+            maven { url 'https://maven.aliyun.com/repository/google' }
+            maven { url 'https://maven.aliyun.com/repository/public' }
+            maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+            google()
+            mavenCentral()
+        }
+    }
+    settings.dependencyResolutionManagement {
+        repositories {
+            maven { url 'https://maven.aliyun.com/repository/google' }
+            maven { url 'https://maven.aliyun.com/repository/public' }
+            google()
+            mavenCentral()
+        }
+    }
+}
